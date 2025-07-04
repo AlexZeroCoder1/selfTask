@@ -63,19 +63,19 @@ export default function Page() {
                 <>
                     {
                         isMobile &&
-                        <div className='flex items-end gap-2 mb-3'>
+                        <div className='flex items-end gap-2 my-4'>
                             <h1>home</h1>
                             <div className='grey-dark mb-2 normal-case'>complete daily tasks and evolve.</div>
                         </div>
                     }
                     <motion.div
                         className='flex gap-3'
-                        initial={{ opacity: 0, y: 100 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0}}
+                        animate={{ opacity: 1}}
                     >
-                        <div className='max-w-[320px]'>
+                        <div>
                             <div className='relative flex flex-col items-center'>
-                                <div className='grey'>rank</div>
+                                <div className='grey mb-2'>rank</div>
                                 <div className='text-8xl/15  mb-5'>
                                     {
                                         overAllSkillRating <= 50 ?
@@ -136,7 +136,7 @@ export default function Page() {
                                 </motion.div>
                             </AnimatePresence>
                             <hr />
-                            <div>
+                            <div className="w-[400px] h-[400px]">
                                 <Calendar value={selectedDate} setValue={setSelectedDate} completedDates={completedDates} />
                             </div>
 

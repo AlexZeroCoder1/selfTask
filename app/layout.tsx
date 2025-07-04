@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Header />
         <AuthListener />
-        <main className="max-w-[704px] mx-auto px-4 flex flex-col justify-center items-center">
+        <main className="max-w-[790px] mx-auto px-4 flex flex-col justify-center items-center">
           {children}
         </main>
         <Footer />

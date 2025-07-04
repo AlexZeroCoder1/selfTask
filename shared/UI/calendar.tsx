@@ -32,6 +32,7 @@ export default function Calendar(
         <ThemeProvider theme={darkTheme}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateCalendar 
+                    sx={{ maxWidth: 420, width: '100%' }}
                     value={value}
                     onChange={(newValue) => newValue && setValue(newValue)}
                     shouldDisableDate={(day) => day.isAfter(dayjs())}

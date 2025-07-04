@@ -23,15 +23,15 @@ export default function Page() {
         <>
             {
                 isMobile &&
-                <div className='flex items-end gap-2 mb-3'>
+                <div className='flex items-end gap-2 my-4'>
                     <h1>settings</h1>
                     <div className='grey-dark mb-2 normal-case'>define your way and follow it.</div>
                 </div>
             }
             <motion.div
                 className='w-full'
-                initial={{ opacity: 0, y: 100 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0}}
+                animate={{ opacity: 1}}
             >
                 <GlobalMuiOverrides />
                 <div className="ml-2 mb-2">Change Tasks</div>

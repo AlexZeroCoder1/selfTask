@@ -1,5 +1,5 @@
 import { useUserStore } from "../store/store"
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore'
+import { collection, doc, documentId, getDoc, getDocs, limit, orderBy, query, setDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { useEffect, useState } from "react"
 import dayjs, { Dayjs } from 'dayjs'
@@ -27,20 +27,26 @@ export const useFetchTask = (paths: string[]) => {
             if (snap.exists()) {
                 const data = snap.data()
                 setTasks(data.tasks as Task[])
+                return
+            }
+            const tasksByDateRef = collection(db, 'users', user.uid, 'paths', selectedPath, 'tasksByDate')
+
+            const lastQ = query(
+                tasksByDateRef,
+                orderBy(documentId(), 'desc'), // сортируем по ID (YYYY‑MM‑DD)
+                limit(1)
+            )
+            const lastSnap = await getDocs(lastQ)
+
+            if (!lastSnap.empty) {
+                // берём первый (и единственный) документ
+                const latestTasks = lastSnap.docs[0].data().tasks as Task[]
+
+                // сбрасываем completed = false, как раньше
+                const updated = latestTasks.map(t => ({ ...t, completed: false }))
+                setTasks(updated)
             } else {
-                const today = dayjs().format('YYYY-MM-DD')
-                const docRef = doc(db, 'users', user.uid, 'paths', selectedPath, 'tasksByDate', today)
-                const snap = await getDoc(docRef)
-                if (snap.exists()) {
-                    const data = snap.data()
-                    const updatedTasks = (data.tasks as Task[]).map(task => ({
-                        ...task,
-                        completed: false
-                    }))
-                    setTasks(updatedTasks)
-                } else {
-                    setTasks(defaultTasks[selectedPath])
-                }
+                setTasks(defaultTasks[selectedPath])
             }
         } catch (err) {
             console.error(err)
@@ -153,6 +159,13 @@ export const useEditTask = (tasks: Task[], path: string) => {
             return
         }
         try {
+
+            const today = dayjs().format('YYYY-MM-DD')
+            const docRef = doc(db, 'users', user.uid, 'paths', path, 'tasksByDate', today)
+            const snap = await getDoc(docRef)
+            if (!snap.exists())
+                await setDoc(docRef, { tasks, updatedAt: new Date() })
+
             const datesRef = collection(db, 'users', user.uid, 'paths', path, 'tasksByDate')
             const snapshot = await getDocs(datesRef)
 
